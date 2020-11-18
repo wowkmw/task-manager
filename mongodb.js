@@ -20,28 +20,16 @@ MongoClient.connect(connectionURL, {
         return console.log('unable to connect to database!');
     }
     const db = client.db(databaseName);
-    // db.collection('users').findOne({
-    //     _id: new ObjectID("5fb36664ad310432c461e5cb")
-    // }, (err, res) => {
-    //     if (err) {
-    //         return console.log('unable to fetch user');
-    //     }
-    //     console.log(res);
-    // });
-    db.collection('users').find({
-        age: 25
-    }).toArray((err, res) => {
-        if (err) {
-            return console.log('unable to fetch user');
+
+    db.collection('tasks').updateMany({
+        completed: false
+    }, {
+        $set: {
+            completed: true
         }
-        console.log(res);
-    });
-    db.collection('users').find({
-        age: 25
-    }).count((err, res) => {
-        if (err) {
-            return console.log('unable to fetch user');
-        }
-        console.log(res);
+    }).then((result) => {
+        console.log(result);
+    }).catch((err) => {
+        console.log(err);
     });
 });

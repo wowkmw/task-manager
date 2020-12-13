@@ -34,6 +34,29 @@ app.get('/users/:id', async (req, res) => {
         }
         res.send(user);
     } catch (e) {
+        res.status(500).send(e);
+    }
+});
+
+app.patch('/users/:id', async (req, res) => {
+    const updates = Object.keys(req.body);
+    const allowedUpdates = ['name', 'email', 'password', 'age'];
+    const isValidOp = updates.every(item => allowedUpdates.includes(item));
+    if (!isValidOp) {
+        return res.status(400).send({
+            Error: 'invalid update params'
+        });
+    }
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+        if (!user) {
+            return res.send.status(404).send();
+        }
+        res.send(user);
+    } catch (e) {
         res.status(400).send(e);
     }
 });
@@ -56,7 +79,6 @@ app.get('/tasks', async (req, res) => {
     } catch (e) {
         res.status(500).send(e);
     }
-    // Task.find({}).then(r => res.status(200).send(r)).catch(e => res.status(500).send(e));
 });
 
 app.get('/tasks/:id', async (req, res) => {
@@ -69,12 +91,29 @@ app.get('/tasks/:id', async (req, res) => {
     } catch (e) {
         res.status(500).send(e);
     }
-    // Task.findById(req.params.id).then(r => {
-    //     if (!r) {
-    //         return res.status(404).send();
-    //     }
-    //     res.status(200).send(r);
-    // }).catch(e => res.status(500).send(e));
+});
+
+app.patch('/tasks/:id', async (req, res) => {
+    const updates = Object.keys(req.body);
+    const allowedUpdates = ['description', 'completed'];
+    const isValidOp = updates.every(item => allowedUpdates.includes(item));
+    if (!isValidOp) {
+        return res.status(400).send({
+            Error: 'invalid update params'
+        });
+    }
+    try {
+        const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+        if (!task) {
+            return res.send.status(404).send();
+        }
+        res.send(task);
+    } catch (e) {
+        res.status(400).send(e);
+    }
 });
 
 app.listen(port, () => console.log(`Server is up on port ${port}`));

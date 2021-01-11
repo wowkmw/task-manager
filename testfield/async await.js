@@ -1,15 +1,15 @@
-function add(a, b) {
-    return new Promise((resolve, reject) => {
+async function add(a, b) {
+    const myfunc = () => {
         if (typeof a !== "number" || typeof b !== "number") {
-            return reject(new Error('input is not a number'));
+            throw new Error('input is not a number');
         }
-        setTimeout(() => {
-            console.log('1 s');
-            console.log(a + b);
-            resolve(a + b);
-        }, 1000);
-        console.log('processing...');
-    });
+        let i = 0;
+        while (i < 2000000000) {
+            i++;
+        }
+        return (a + b);
+    };
+    return (myfunc());
 }
 
 //async function always return a promise
